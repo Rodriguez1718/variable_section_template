@@ -14,12 +14,18 @@ interface Props {
   ctaText?: string;
   ctaLink?: string;
   cards: Card[];
+  sectionBackground?: "gradient" | "white";
 }
 
-const { title, description, ctaText, ctaLink, cards = [] } = Astro.props;
+const { title, description, ctaText, ctaLink, cards = [], sectionBackground = "gradient" } = Astro.props;
+
+const bgClass = sectionBackground === "white" ? "bg-white" : "";
+const bgStyle = sectionBackground === "gradient" 
+  ? "background-color: #f9f9f7; background-image: radial-gradient(ellipse at 0% 0%, rgba(0,107,114,0.10) 0%, transparent 65%), radial-gradient(ellipse at 100% 100%, rgba(0,173,181,0.09) 0%, transparent 65%), radial-gradient(ellipse at 80% 10%, rgba(0,107,114,0.06) 0%, transparent 50%);"
+  : "";
 ---
 
-<section class="py-16 md:py-24 relative overflow-hidden" style="background-color: #f9f9f7; background-image: radial-gradient(ellipse at 0% 0%, rgba(0,107,114,0.08) 0%, transparent 50%), radial-gradient(ellipse at 100% 100%, rgba(0,173,181,0.07) 0%, transparent 50%), radial-gradient(ellipse at 80% 10%, rgba(0,107,114,0.05) 0%, transparent 40%);">
+<section class={`py-16 md:py-24 relative overflow-hidden ${bgClass}`} style={bgStyle}>
   <!-- Decorative Glow Blobs -->
   <div class="glow-orb glow-orb-green w-[600px] h-[600px] -top-[10%] -left-[10%] opacity-15"></div>
   <div class="glow-orb glow-orb-mint w-[500px] h-[500px] -bottom-[10%] -right-[10%] opacity-15"></div>
@@ -56,26 +62,17 @@ const { title, description, ctaText, ctaLink, cards = [] } = Astro.props;
           return (
             <CardWrapper
               {...wrapperProps}
-              class={`group relative p-8 bg-white border-2 border-gray-300 hover:shadow-lg hover:border-primary-light transition-all duration-300 ${card.link ? "cursor-pointer" : ""}`}
-              style="clip-path: polygon(0% 0%, calc(100% - 20px) 0%, 100% 20px, 100% 100%, 0% 100%);"
+              class={`group relative p-8 bg-white border-2 border-gray-300 hover:shadow-lg hover:border-primary-light transition-all duration-300 rounded-3xl ${card.link ? "cursor-pointer" : ""}`}
             >
-              {/* Fold triangle in top-right corner */}
-              <div class="absolute top-0 right-0 w-0 h-0 pointer-events-none"
-                style="border-style: solid; border-width: 0 20px 20px 0; border-color: transparent #e5e7eb transparent transparent;">
-              </div>
-              <div class="absolute top-0 right-0 w-0 h-0 pointer-events-none group-hover:border-r-primary-light/30 transition-colors duration-300"
-                style="border-style: solid; border-width: 0 20px 20px 0; border-color: transparent #f9f9f7 transparent transparent;">
-              </div>
-
               {card.icon && (
-                <div class="w-12 h-12 bg-primary-light text-white flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <Icon name={card.icon} class="w-6 h-6" />
+                <div class="w-16 h-16 bg-gradient-to-br from-primary-light to-primary text-white flex items-center justify-center mb-6 group-hover:scale-125 transition-transform duration-300 rounded-lg shadow-lg">
+                  <Icon name={card.icon} class="w-8 h-8" />
                 </div>
               )}
-              <h3 class="font-bold mb-3 text-primary-dark group-hover:text-primary-light transition-colors duration-300" style="font-size: 16px;">
+              <h3 class="font-bold mb-3 text-primary-dark group-hover:text-primary transition-colors duration-300" style="font-size: 16px;">
                 {card.title}
               </h3>
-              <p class="text-gray-600 leading-relaxed" style="font-size: 15px;" set:html={card.description} />
+              <p class="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors" style="font-size: 15px;" set:html={card.description} />
             </CardWrapper>
           );
         })
@@ -86,12 +83,14 @@ const { title, description, ctaText, ctaLink, cards = [] } = Astro.props;
       <div class="mt-10 flex justify-center">
         <a
           href={ctaLink}
-          class="btn-clipped inline-flex items-center gap-2 px-8 py-3 bg-primary-light text-white text-xs font-bold uppercase tracking-wider transition-all duration-300 hover:bg-primary-lighter"
+          class="btn-modern"
         >
-          {ctaText}
-          <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H7M17 7v10" />
-          </svg>
+          <span class="btn-modern-content">{ctaText}</span>
+          <span class="btn-modern-icon">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H7M17 7v10" />
+            </svg>
+          </span>
         </a>
       </div>
     )}

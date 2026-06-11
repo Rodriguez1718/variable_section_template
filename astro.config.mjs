@@ -1,4 +1,4 @@
-// @ts-check
+﻿// @ts-check
 import { defineConfig, fontProviders } from "astro/config";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
@@ -115,7 +115,7 @@ function applyThemeColors(/** @type {string} */ code) {
 /**
  * Vite plugin: syncs site.json brand colors into @theme at build + dev time.
  * Watches site.json and invalidates all CSS modules so Tailwind re-processes
- * the @theme block with fresh colors on every save — no restart needed.
+ * the @theme block with fresh colors on every save ΓÇö no restart needed.
  */
 function themeColorsPlugin() {
   return {
@@ -126,7 +126,7 @@ function themeColorsPlugin() {
       server.watcher.on("change", /** @param {string} changedPath */ (changedPath) => {
         const norm = changedPath.replace(/\\/g, "/");
         if (!norm.endsWith("data/settings/site.json")) return;
-        // Invalidate ALL modules — site.json, site.ts, config.ts,
+        // Invalidate ALL modules ΓÇö site.json, site.ts, config.ts,
         // every .astro component, and all CSS so everything re-reads fresh data
         for (const [, mods] of server.moduleGraph.fileToModulesMap) {
           for (const mod of mods) {
@@ -150,7 +150,7 @@ export default defineConfig({
   site: siteData.seo?.siteUrl || "https://www.linktothrive.com",
   adapter: vercel({
     webAnalytics: {
-      enabled: process.env.NODE_ENV === "production",
+      enabled: false,
     },
   }),
   // CSP is set via vercel.json headers to avoid Astro auto-hashing
@@ -174,7 +174,7 @@ export default defineConfig({
       lastmod: new Date(),
       filter: (page) => !page.includes("/404"),
       serialize(item) {
-        // Homepage — highest priority, crawled daily
+        // Homepage ΓÇö highest priority, crawled daily
         if (/\/$/.test(item.url) && !item.url.replace(/https?:\/\/[^/]+/, "").replace(/\/$/, "")) {
           return { ...item, changefreq: EnumChangefreq.DAILY, priority: 1.0 };
         }
@@ -194,7 +194,7 @@ export default defineConfig({
         if (item.url.includes("/about-us") || item.url.includes("/contact-us")) {
           return { ...item, changefreq: EnumChangefreq.MONTHLY, priority: 0.7 };
         }
-        // Privacy, Terms — low priority
+        // Privacy, Terms ΓÇö low priority
         if (item.url.includes("/privacy") || item.url.includes("/terms")) {
           return { ...item, changefreq: EnumChangefreq.YEARLY, priority: 0.3 };
         }

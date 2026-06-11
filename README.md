@@ -1,203 +1,269 @@
-# Astro Marketing Website Scaffolding
+# Variable Section Template - Astro Dealer Website
 
-A production-ready Astro website scaffolding following AstroWind best practices, optimized for AI content management.
+A modern, production-ready Astro website with server-side rendering (SSR) and integrated EmDash CMS for real-time content management. Built for performance, SEO, and seamless content updates.
 
 ## 🚀 Features
 
-- ✅ **Content Collections** - Type-safe MDX content management
-- ✅ **Dynamic Navigation** - Auto-generated from content
-- ✅ **View Transitions** - Instant page navigation (SPA-like)
-- ✅ **SEO Optimized** - Meta tags, Open Graph, Twitter Cards
-- ✅ **Config-driven** - Single YAML file for site settings
-- ✅ **Tailwind CSS** - Modern styling with Tailwind v4
-- ✅ **TypeScript** - Full type safety
-- ✅ **AI-friendly** - Easy content updates via config files
+- ✅ **Server-Side Rendering (SSR)** - On-demand rendering via Vercel Edge Functions
+- ✅ **EmDash CMS Integration** - Real-time content management with Turso/libSQL database (no rebuild required)
+- ✅ **Modern UI Design** - Clip-path styling, gradient backgrounds, glassmorphism effects
+- ✅ **Dynamic Content Management** - Manage solutions, locations, billboards, and pages via CMS
+- ✅ **Real-Time Theming** - Dynamic color updates from site.json with CSS variables
+- ✅ **SEO Optimized** - Structured data, meta tags, Open Graph, XML sitemap, breadcrumbs
+- ✅ **View Transitions** - SPA-like navigation without full page reloads
+- ✅ **Responsive Design** - Mobile-first approach with full accessibility
+- ✅ **Tailwind CSS 4** - Dynamic theming with real-time color sync
+- ✅ **TypeScript** - Full type safety across the project
+- ✅ **Performance Optimized** - Lighthouse 90+, Core Web Vitals targets (LCP < 2.5s, FID < 100ms, CLS < 0.1)
+- ✅ **Admin Dashboard** - EmDash admin at `/_emdash/admin`
+- ✅ **Vercel Deployment** - Optimized for serverless with Edge caching
 
 ## 📁 Project Structure
 
 ```
 /
 ├── src/
-│   ├── config.yaml              # Site configuration
-│   ├── navigation.ts            # Navigation structure
-│   ├── content/                 # MDX content files
-│   │   ├── solutions/
-│   │   │   ├── foundational/
-│   │   │   └── lead-gen/
-│   │   └── indoor-billboards/
 │   ├── components/
-│   │   ├── ui/                  # UI components
-│   │   └── widgets/             # Page sections (Hero, Features, etc.)
-│   ├── layouts/                 # Page layouts
-│   ├── pages/                   # Routes
-│   ├── utils/                   # Utility functions
-│   └── types/                   # TypeScript types
-├── vendor/
-│   └── integration/             # Config loader integration
-├── docs/
-│   └── AI_GUIDELINES.md         # AI content management guide
-└── public/                      # Static assets
+│   │   ├── ui/                  # UI components (Header, Footer, PopupModal, etc.)
+│   │   ├── sections/            # Page section components (Hero, Features, Services, etc.)
+│   │   └── seo/                 # SEO components (StructuredData, Meta tags)
+│   ├── pages/                   # Dynamic routes (solutions, locations, billboards)
+│   ├── layouts/                 # Page layouts (PageLayout, BaseLayout)
+│   ├── lib/
+│   │   ├── emdash.config.mjs    # EmDash CMS configuration
+│   │   ├── content.ts           # Content utility functions
+│   │   └── session-driver.mjs   # Astro session management
+│   ├── data/
+│   │   ├── pages/               # Static page data (JSON)
+│   │   ├── settings/            # Site configuration and theme colors
+│   │   └── media/               # Media assets
+│   ├── config/                  # Site configuration
+│   ├── styles/                  # Global CSS with theme variables
+│   └── middleware.ts            # EmDash authentication middleware
+├── .emdash/
+│   └── seed.json                # EmDash database seed data
+├── scripts/                     # Utility scripts for EmDash
+│   ├── apply-seed.mjs
+│   ├── generate-seed.mjs
+│   └── check-state.mjs
+├── public/                      # Static assets
+├── astro.config.mjs             # Astro configuration with EmDash setup
+├── tailwind.config.cjs          # Tailwind CSS configuration
+└── vercel.json                  # Vercel deployment configuration
 ```
 
-## 🛠️ Getting Started
+## 🛠️ Quick Start
 
 ### Prerequisites
 
-- [Bun](https://bun.sh/) 1.x+
+- Node.js 22.12.0 - 24.x
+- npm or yarn
+- Turso account (for production)
+- Vercel account (for deployment)
 
 ### Installation
 
 ```bash
-bun install
+npm install
+
+# Generate EmDash encryption key
+npm run cms:secret
+# Copy output to .env as EMDASH_ENCRYPTION_KEY
+
+# Initialize EmDash database
+npm run cms:init
+
+# Start development server
+npm run dev
 ```
 
-### Development
+**Access:**
+- Website: `http://localhost:3000`
+- EmDash Admin: `http://localhost:3000/_emdash/admin`
+
+### Build & Deploy
 
 ```bash
-bun run dev
-```
-
-Visit `http://localhost:4321`
-
-### Build
-
-```bash
-bun run build
-```
-
-### Preview
-
-```bash
-bun run preview
+npm run build    # Local build → .vercel/output/
+git push         # Auto-deploys to Vercel
 ```
 
 ## 📝 Content Management
 
-### Update Site Settings
+### EmDash CMS - No Rebuilds Required
 
-Edit `src/config.yaml`:
+Content updates are **live immediately** without rebuild:
 
-```yaml
-site:
-  name: Your Brand
-  site: 'https://yourdomain.com'
-  trailingSlash: false
+1. Navigate to `http://localhost:3000/_emdash/admin` (dev) or `https://yourdomain.com/_emdash/admin` (prod)
+2. Edit content in collections
+3. Publish → Changes appear instantly on live site
 
-metadata:
-  title:
-    default: Your Brand
-  description: 'Your site description'
+### Collections
+
+| Collection | Purpose | Features |
+|-----------|---------|----------|
+| **Pages** | Homepage, about, contact | Title, description, sections, SEO metadata |
+| **Solutions** | Services with 3 categories | Category, icon, thumbnail, CTA, order |
+| **Locations** | Location-specific pages | `{city}`, `{state}`, `{business}` token replacement |
+| **Indoor Billboards** | Billboard products | Icon, thumbnail, CTA, order |
+
+### Dynamic Token Replacement
+
+All content supports auto-replacement:
+- `{city}` → Denver
+- `{state}` → Colorado  
+- `{business}` → LinktoThrive
+
+Perfect for location-based landing pages.
+
+### Publishing Workflow
+
+Draft → Preview → (Optional) Schedule → Publish → **Live**
+
+## 🎨 Design & Customization
+
+### Real-Time Theme Colors
+
+Edit `src/data/settings/site.json` to update colors instantly (no rebuild):
+
+```json
+{
+  "colors": {
+    "primary": "#4A8D2A",
+    "primaryLight": "#7CB342",
+    "primaryDark": "#2D5016",
+    "secondary": "#FFB81C",
+    "neutral": "#F9F9F7"
+  }
+}
 ```
 
-### Add New Service Page
+CSS variables auto-sync via Vite plugin.
 
-Create a new MDX file in `src/content/solutions/foundational/` or `lead-gen/`:
+### Section Components (20+)
 
-```mdx
----
-title: "Service Name"
-description: "Service description"
-category: "foundational"
-order: 1
----
+Flexible, reusable components for content:
+- **Hero**, **ServicesGrid**, **Features**, **FeaturesWithImage**
+- **ContentWithImage**, **ContentWithKeypoints**, **FAQs**, **MapSection**
+- **CallToAction**, **TeamSection**, **FormSection**, **ClientShowcase**
+- And more...
 
-# Service Name
+### Key Design Features
 
-Your content here...
-```
+- **Angled/Clipped Elements** - Modern geometric styling
+- **Gradient Backgrounds** - Visual hierarchy with brand colors
+- **Glassmorphism** - Backdrop filters for premium feel
+- **Animations** - Scroll-triggered on desktop, disabled on mobile (accessibility)
 
-The page automatically appears in navigation and at the correct URL.
+## 🌍 Routes
 
-### Update Navigation
+- `/solutions/[category]/[slug]` - Foundational, lead-gen, branding-awareness
+- `/locations/[slug]` - Location-specific pages  
+- `/indoor-billboards/[slug]` - Billboard products
 
-Edit `src/navigation.ts` to customize menu structure. Sections marked `'auto'` are populated from content collections.
+## 📚 Tech Stack
 
-## 🤖 AI Content Management
+- **Framework:** Astro 6.0.8 (SSR via Vercel)
+- **CMS:** EmDash 0.16.1 (real-time content management)
+- **Database:** Turso (libSQL) + SQLite (dev)
+- **Styling:** Tailwind CSS 4.3.0 with dynamic theming
+- **Hosting:** Vercel (serverless Edge Functions)
+- **Language:** TypeScript 5.9.3
+- **Image Optimization:** Sharp 0.34.5
+- **UI:** React 19 (EmDash admin only)
+- **Icons:** Astro Icon
+- **Sitemap:** @astrojs/sitemap
+- **Node:** 22.12.0 - 24.x
 
-See `docs/AI_GUIDELINES.md` for detailed instructions on how AI can update content.
-
-**Quick Reference:**
-- Site settings: `src/config.yaml`
-- Navigation: `src/navigation.ts`
-- Service pages: `src/content/solutions/`
-- Billboard pages: `src/content/indoor-billboards/`
-- Homepage: `src/pages/index.astro`
-
-## 🎨 Customization
-
-### Styling
-
-Global styles: `src/styles/global.css`
-
-Tailwind config is handled via `@tailwindcss/vite` plugin.
-
-### Components
-
-Reusable widgets in `src/components/widgets/`:
-- `Hero.astro` - Hero sections
-- `Features.astro` - Feature grids
-- `CallToAction.astro` - CTA sections
-- `Header.astro` - Site header
-- `Footer.astro` - Site footer
-
-### Layouts
-
-- `BaseLayout.astro` - Base HTML structure
-- `PageLayout.astro` - Standard page wrapper
-
-## 📦 Tech Stack
-
-- **Framework:** Astro 5.x
-- **Styling:** Tailwind CSS 4.x
-- **Content:** MDX with Content Collections
-- **Type Safety:** TypeScript
-- **Config:** YAML with Zod validation
-- **View Transitions:** Astro's built-in ClientRouter
-
-## 🔧 Utilities
-
-- `permalinks.ts` - URL generation
-- `utils.ts` - Date formatting, number formatting
-- `images.ts` - Image path resolution
-- `frontmatter.ts` - Reading time calculation
-- `directories.ts` - Path utilities
-
-## 📚 Documentation
-
-- [AI Guidelines](docs/AI_GUIDELINES.md) - How to update content
-- [Astro Docs](https://docs.astro.build)
-- [Tailwind CSS](https://tailwindcss.com)
-
-## 🚀 Deployment
-
-Build the site:
+## 📄 Available Commands
 
 ```bash
-bun run build
+npm run dev              # Start dev server
+npm run build            # Production build
+npm run preview          # Preview build locally
+npm run cms:secret       # Generate encryption key
+npm run cms:init         # Initialize EmDash
+npm run cms:seed         # Seed initial data
+npm run cms:export       # Export content
 ```
 
-Deploy the `dist/` folder to any static hosting:
-- Vercel
-- Netlify
-- Cloudflare Pages
-- GitHub Pages
+## 📖 Learn More
 
-## 📄 License
+See [DOCUMENTATION.md](./DOCUMENTATION.md) for complete technical details on design approach, major changes, EmDash integration, performance optimization, and deployment.
 
-MIT
+- [Astro Docs](https://docs.astro.build)
+- [EmDash Docs](https://emdash.dev)
+- [Tailwind CSS](https://tailwindcss.com)
+- [Turso](https://turso.tech)
+- [Vercel](https://vercel.com/docs)
 
-## 🙏 Credits
+## 🚀 Deployment on Vercel
 
-Inspired by [AstroWind](https://github.com/arthelokyo/astrowind)
+### Environment Variables
 
-## Contact Form Setup
+**Required** (set in Vercel):
+```
+TURSO_DATABASE_URL=libsql://your-db.turso.io
+TURSO_AUTH_TOKEN=your-auth-token
+EMDASH_ENCRYPTION_KEY=your-encryption-key
+```
 
-The main contact page currently uses an embedded GoHighLevel form.
+**Optional** (S3 media storage):
+```
+S3_ENDPOINT, S3_BUCKET, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY
+```
 
-1. Copy `.env.example` to `.env`.
-2. If you reuse the shared `FormSection` component on another page, provide your own `submitAction` endpoint in the page data or component props.
-3. Test the configured endpoint before publishing.
+### Setup Turso Database
 
-Notes:
-- Web3Forms references have been removed from this project.
-- The shared `FormSection` no longer assumes any specific vendor and will show an error if no submission endpoint is configured.
+```bash
+turso db create linktothrive
+turso db tokens create linktothrive
+turso db show linktothrive --http  # Get connection string
+npm run cms:init                   # Create schema in Turso
+```
+
+### Deploy
+
+```bash
+git push origin main  # Vercel webhook auto-deploys
+# Or manual: vercel deploy
+```
+
+### URLs
+
+- **Production**: `https://www.linktothrive.com`
+- **Admin**: `https://www.linktothrive.com/_emdash/admin`
+- **Preview**: `https://[branch]---[project].vercel.app`
+
+### Security Headers
+
+Configured in `vercel.json`:
+- X-Frame-Options, X-Content-Type-Options, Referrer-Policy
+- CSP for public pages, relaxed CSP for admin
+- Admin routes: noindex, nofollow
+
+## ⚡ Performance Optimizations
+
+### Core Targets
+
+- **Lighthouse**: 90+ (Performance, Accessibility, Best Practices, SEO)
+- **LCP**: < 2.5s | **FID**: < 100ms | **CLS**: < 0.1
+
+### Key Techniques
+
+1. **Single CSS Bundle** - No code splitting for better compression
+2. **Image Optimization** - Sharp service with AVIF conversion and lazy loading
+3. **Dynamic Imports** - Heavy components loaded on-demand
+4. **Font Strategy** - Preloading with `display: swap`
+5. **View Transitions** - SPA-like navigation without full reloads
+6. **Request/Response Streaming** - Progressive HTML rendering
+7. **1-Year Caching** - Static assets cached with hash-based filenames
+8. **Mobile-First Animations** - No animations on mobile, scroll-triggered on desktop
+
+### Monitoring
+
+Use [Google PageSpeed Insights](https://pagespeed.web.dev) for real-world Core Web Vitals.
+
+## 📄 License & Support
+
+MIT License. For issues or detailed documentation, see [DOCUMENTATION.md](./DOCUMENTATION.md).

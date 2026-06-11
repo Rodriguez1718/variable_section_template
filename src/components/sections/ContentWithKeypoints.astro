@@ -8,6 +8,7 @@ interface Props {
   image?: string;
   imageLarge?: string;
   keyPoints?: string[];
+  sectionBackground?: "gradient" | "white";
 }
 
 const {
@@ -19,10 +20,16 @@ const {
   image,
   imageLarge,
   keyPoints = [],
+  sectionBackground = "white",
 } = Astro.props;
+
+const bgClass = sectionBackground === "white" ? "bg-white" : "";
+const bgStyle = sectionBackground === "gradient" 
+  ? "background-color: #f9f9f7; background-image: radial-gradient(ellipse at 0% 0%, rgba(0,107,114,0.10) 0%, transparent 65%), radial-gradient(ellipse at 100% 100%, rgba(0,173,181,0.09) 0%, transparent 65%);"
+  : "";
 ---
 
-<section class="py-12 sm:py-16 md:py-24 bg-white relative overflow-hidden">
+<section class={`py-12 sm:py-16 md:py-24 relative overflow-hidden ${bgClass}`} style={bgStyle}>
   <!-- Decorative Glow Blob -->
   <div class="glow-orb glow-orb-green w-[400px] h-[400px] -top-20 -right-20 opacity-10"></div>
   <div class="max-w-7xl mx-auto px-2 sm:px-3 lg:px-4">
@@ -80,12 +87,14 @@ const {
           ctaText && ctaLink && (
             <a
               href={ctaLink}
-              class="btn-clipped inline-flex items-center gap-2 px-8 py-3 bg-primary-light text-white text-xs font-bold uppercase tracking-wider transition-all duration-300 hover:bg-primary-lighter"
+              class="btn-modern"
             >
-              {ctaText}
-              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H7M17 7v10" />
-              </svg>
+              <span class="btn-modern-content">{ctaText}</span>
+              <span class="btn-modern-icon">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H7M17 7v10" />
+                </svg>
+              </span>
             </a>
           )
         }
@@ -93,7 +102,7 @@ const {
       {
         image && (
           <div
-            class="hidden lg:block relative overflow-hidden order-1 lg:order-2 lg:col-span-2 self-stretch"
+            class="hidden lg:block relative overflow-hidden order-1 lg:order-2 lg:col-span-2 self-stretch rounded-3xl"
             data-animate="fade-left"
           >
             <picture>

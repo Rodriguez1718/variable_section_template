@@ -1,6 +1,26 @@
 @import "tailwindcss";
 
 /* ============================================
+   MARQUEE ANIMATION
+   ============================================ */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+.hover\:pause-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* ============================================
    GLOBAL COLOR SCHEME - TAILWIND V4
    Change these 4 colors to update the entire site
    ============================================ */
@@ -114,6 +134,82 @@ h4 {
 
 .btn-clipped:hover::before {
   left: 125%;
+}
+
+/* ============================================
+   NEW BUTTON STYLE — Light background with dark text and icon box
+   ============================================ */
+.btn-modern {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 12px;
+  background: #dff39e;
+  color: #102b32;
+  font-weight: bold;
+  font-size: 15px;
+  letter-spacing: 0.05em;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-modern-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  position: relative;
+  z-index: 2;
+  transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-modern-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: #102b32;
+  color: #E8F08D;
+  border-radius: 8px;
+  flex-shrink: 0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  z-index: 2;
+}
+
+/* Swipe animation overlay from right to left */
+.btn-modern::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -100%;
+  width: 100%;
+  height: 100%;
+  background: #102b32;
+  border-radius: 12px;
+  transition: right 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
+}
+
+.btn-modern:hover {
+  box-shadow: 0 12px 24px rgba(16, 43, 50, 0.2);
+}
+
+.btn-modern:hover::before {
+  right: 0;
+}
+
+.btn-modern:hover .btn-modern-content {
+  color: #dff39e;
+}
+
+.btn-modern:hover .btn-modern-icon {
+  background: #dff39e;
+  color: #102b32;
 }
 
 /* Custom Scrollbar Styles for Dropdown */
@@ -583,4 +679,16 @@ section.bg-gray-50 {
   .hero-panel-animate {
     animation: none;
   }
+}
+
+/* ============================================
+   HERO TITLE HOVER EFFECT
+   ============================================ */
+#hero-title {
+  transition: color 0.3s ease;
+  cursor: pointer;
+}
+
+#hero-title:hover {
+  color: #ff6b35 !important;
 }
